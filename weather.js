@@ -3,7 +3,7 @@ const WEATHER_API_BASE = 'https://api.openweathermap.org/data/2.5/weather';
 
 class WeatherCommand {
     constructor() {
-        this.description = "Show weather for a city. Usage: weather <city>";
+        this.description = "Show weather for a city. Usage: weather [city]";
         this.output = "dynamic";
     }
 

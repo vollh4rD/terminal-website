@@ -90,16 +90,16 @@ body {
 }
 
 .cursor:not(.typing):not(.enter) {
-  background-image: url('idol.svg');
+  background-image: url('assets/idol.svg');
   animation: blink 1s infinite;
 }
 
 .cursor.typing {
-  background-image: url('typing.svg');
+  background-image: url('assets/typing.svg');
 }
 
 .cursor.enter {
-  background-image: url('enter_clicked.svg');
+  background-image: url('assets/enter_clicked.svg');
 }
 
 @keyframes blink {

@@ -140,10 +140,6 @@ async function executeCommand(commandLine) {
       } else {
           output = cmd.output;
           await addToHistory(command, output);
-          
-          if (cmd.url) {
-              window.open(cmd.url, '_blank');
-          }
       }
   } else {
       await addToHistory(command, `Command not found: ${command}. Type 'help' for available commands.`, true);
@@ -157,20 +153,21 @@ class ConnectCommand {
   }
 
   async execute() {
-      const links = [
-          { platform: "X", url: "https://x.com/xvollhard" },
-          { platform: "LinkedIn", url: "https://linkedin.com/in/samrudh-yash" },
-          { platform: "GitHub", url: "https://github.com/vollh4rD" },
-          { platform: "Medium", url: "https://medium.com/@samrudhyash" }
-      ];
-
-      // Calculate the maximum length of the URLs
-      const maxLength = Math.max(...links.map(link => link.url.length));
-
-      const socialLinks = links.map(link => {
-          const padding = ' '.repeat(maxLength - link.url.length + 3); // +2 for the space after the URL
-          return `│  ${link.platform.padEnd(10)} : <a href="${link.url}" target="_blank" class="command-link">${link.url}</a>${padding}│`;
-      }).join('\n');
+    const links = [
+        { platform: "X", url: "https://x.com/xvollhard" },
+        { platform: "Email", url: "samrudh@duck.com", href: "mailto:samrudh@duck.com" },
+        { platform: "LinkedIn", url: "https://linkedin.com/in/samrudh-yash" },
+        { platform: "GitHub", url: "https://github.com/vollh4rD" },
+        { platform: "Medium", url: "https://medium.com/@samrudhyash" }
+    ];
+  
+    // Calculate the maximum length of the URLs
+    const maxLength = Math.max(...links.map(link => link.url.length));
+  
+    const socialLinks = links.map(link => {
+        const padding = ' '.repeat(maxLength - link.url.length + 3); // +2 for the space after the URL
+        return `│  ${link.platform.padEnd(10)} : <a href="${link.href || link.url}" target="_blank" class="command-link">${link.url}</a>${padding}│`;
+    }).join('\n');
 
       return `┌──────────────────────────────────────────────────────┐
 │               Connect with me                        │
