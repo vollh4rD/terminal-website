@@ -1,0 +1,33 @@
+{
+  "commands": {
+    "help": {
+      "description": "List all available commands",
+      "output": "dynamic"
+    },
+    "about": {
+      "description": "Know more about Samrudh",
+      "output": "I am Samrudh aka Vollhard,what have I do so far? \n1. Represented my country and competed against for developing greentech (Red Bull Basement 2021)\n2. Worked with fortune 500 and unicorn companies in securing their network. \n3. Was the Head of Student R&D division of my univeristy, we built robots and satelite prototypes. \n4. Won 2 national championships with the go-kart our team built. \n \nLeaving a digital footprint of my 2cents on Tech, Design & Philosophy"
+    },
+    
+    "blog": {
+      "description": "Check Out my blog on Medium",
+      "output": "Opening blog...",
+      "url": "https://medium.com/@samrudhyash"
+    },
+    "date": {
+      "description": "Show current date and time",
+      "output": "dynamic"
+    },
+    "cv": {
+      "description": "View my cv",
+      "output": "Opening cv...",
+      "url": "https://drive.google.com/file/d/1K1E3HOu-GTkGDm0pJF5NkQNXQemwnwPq/view?usp=drive_link"
+    },
+    "clear": {
+      "description": "Clear the terminal screen",
+      "output": null
+      
+    }
+   
+  }
+}

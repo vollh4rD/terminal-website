@@ -1,0 +1,357 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #1a1a1a;
+  color: #ffffff;
+  font-family: 'Courier New', monospace;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.terminal-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+.terminal-history {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column-reverse;
+  overflow-y: auto;
+  margin-bottom: 12px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.input-section {
+  position: relative;
+  margin-top: auto;
+}
+
+.input-line {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+  position: relative;
+  background: #1a1a1a;
+  font-size: 18px;
+  min-height: 44px;
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+
+.prompt {
+  color: #4ecdc4;
+  margin-right: 8px;
+  white-space: nowrap;
+}
+
+.input-wrapper {
+  position: relative;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+
+#input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-family: 'Courier New', monospace;
+  font-size: 18px;
+  outline: none;
+  padding: 6px 0;
+  line-height: 1.2;
+  caret-color: transparent;
+}
+
+.cursor {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-80%);
+  left: 0;
+  width: 24px;
+  height: 24px;
+  pointer-events: none;
+  transition: all 0.1s ease;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.cursor:not(.typing):not(.enter) {
+  background-image: url('idol.svg');
+  animation: blink 1s infinite;
+}
+
+.cursor.typing {
+  background-image: url('typing.svg');
+}
+
+.cursor.enter {
+  background-image: url('enter_clicked.svg');
+}
+
+@keyframes blink {
+  0%, 100% { 
+      opacity: 0;
+  }
+  50% { 
+      opacity: 1;
+  }
+}
+
+.output {
+  color: #bbb;
+  margin: 0px 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+.error {
+  color: #ff6b6b;
+}
+
+.command-highlight {
+  color: #ff6b6b;
+  font-weight: bold;
+}
+
+.terminal-history * {
+  background: transparent;
+}
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+  .terminal-container {
+      padding: 8px;
+  }
+
+  .input-line, #input, .output {
+      font-size: 13px;
+  }
+
+  .input-line {
+      min-height: 40px;
+  }
+}
+
+/* Handle very small screens */
+@media (max-width: 350px) {
+  .prompt {
+      font-size: 12px;
+  }
+
+  .input-line, #input, .output {
+      font-size: 12px;
+  }
+}
+
+/* Handle viewport height changes */
+@media (max-height: 400px) {
+  .terminal-container {
+      padding: 6px;
+  }
+
+  .terminal-history {
+      margin-bottom: 8px;
+  }
+}
+@media (max-width: 768px) {
+  .input-line, #input, .output, .prompt {
+      font-size: 16px; 
+  }
+}
+
+@media (max-width: 350px) {
+  .input-line, #input, .output, .prompt {
+      font-size: 14px;
+  }
+}
+
+/* Northern lights container */
+.aurora-container {
+  position: fixed;
+  top: -150px;
+  right: -150px;
+  width: 1200px;
+  height: 600px;
+  overflow: visible;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.aurora {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  filter: blur(100px);
+  animation: auroraFlow 15s infinite ease-in-out;
+}
+
+.aurora::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+      circle at 50% 50%,
+      rgba(62, 184, 151, 0.4),
+      rgba(62, 184, 151, 0.1) 40%,
+      transparent 70%
+  );
+  animation: auroraShift 8s infinite alternate;
+}
+
+.aurora::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+      circle at 70% 60%,
+      rgba(60, 132, 146, 0.4),
+      rgba(60, 132, 146, 0.1) 40%,
+      transparent 70%
+  );
+  animation: auroraShift 10s infinite alternate-reverse;
+}
+
+@keyframes auroraFlow {
+  0%, 100% {
+      transform: translateX(-8%) translateY(0%);
+  }
+  50% {
+      transform: translateX(8%) translateY(2%);
+  }
+}
+
+@keyframes auroraShift {
+  0% {
+      opacity: 0.5;
+      transform: scale(1) translateX(0%);
+  }
+  50% {
+      opacity: 0.8;
+      transform: scale(1.2) translateX(8%);
+  }
+  100% {
+      opacity: 0.5;
+      transform: scale(1) translateX(0%);
+  }
+}
+
+/* Add an additional layer for more depth */
+.aurora-layer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+      circle at 30% 40%,
+      rgba(62, 184, 151, 0.3),
+      rgba(62, 184, 151, 0.1) 30%,
+      transparent 60%
+  );
+  filter: blur(60px);
+  animation: auroraLayer 12s infinite alternate-reverse;
+}
+
+@keyframes auroraLayer {
+  0% {
+      transform: translateX(-10%) scale(1.2);
+      opacity: 0.5;
+  }
+  100% {
+      transform: translateX(10%) scale(0.8);
+      opacity: 0.8;
+  }
+}
+
+/*weather*/
+
+.loading {
+  color: #4ecdc4;
+  display: inline-block;
+  animation: loadingDots 1.5s infinite;
+}
+
+@keyframes loadingDots {
+  0%, 20% { content: '.'; }
+  40% { content: '..'; }
+  60% { content: '...'; }
+  80%, 100% { content: ''; }
+}
+
+.social-links a {
+    display: block;
+    color: #ff6b6b;
+    text-decoration: none;
+    margin: 4px 0;
+    padding: 2px 0;
+}
+
+.social-links a:hover {
+    color: #ff6b6b;
+    text-decoration: underline !important;
+}
+
+.social-link:hover {
+  text-decoration: underline !important;
+}
+
+.output {
+  font-family: 'Courier New', monospace;
+  white-space: pre;
+  line-height: 1.2;
+}
+
+.weather-output {
+  font-family: 'Courier New', monospace;
+  white-space: pre;
+}
+
+.command-link {
+  color: #4ecdc4;
+  text-decoration: none;
+  cursor: pointer;
+  pointer-events: auto;
+  padding-left: 0;
+}
+
+.command-link:hover {
+  text-decoration: underline;
+  color: #ff6b6b;
+}
+
+.output {
+  white-space: pre;
+  font-family: 'Courier New', monospace;
+  line-height: 1.2;
+  pointer-events: auto;
+}
+
+.command-highlight {
+  color: #ff6b6b;
+  font-weight: bold;
+}
+
+.output {
+  white-space: pre;
+  font-family: 'Courier New', monospace;
+}

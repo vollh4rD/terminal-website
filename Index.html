@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Terminal</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="aurora-container">
+    <div class="aurora"></div>
+    <div class="aurora-layer"></div>
+  </div>
+  <div class="terminal-container">
+    <div id="history" class="terminal-history"></div>
+    
+    <div class="input-section">
+      <div class="help-panel collapsed">
+        <div class="help-header">
+        </div>
+        <div class="command-list">
+          <!-- Commands will be populated from JSON -->
+        </div>
+      </div>
+
+      <div class="input-line">
+        <span class="prompt">user@samrudh.co ></span>
+        <div class="input-wrapper">
+          <input type="text" id="input" autofocus spellcheck="false">
+          <div class="cursor"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
