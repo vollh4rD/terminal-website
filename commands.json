@@ -1,29 +1,32 @@
+
+
 {
   "commands": {
-    "help": {
-      "description": "List all available commands",
-      "output": "dynamic"
-    },
-    "about": {
-      "description": "Know more about Samrudh",
-      "output": "I am Samrudh aka Vollhard,what have I do so far? \n1. Represented my country and competed against for developing greentech (Red Bull Basement 2021)\n2. Worked with fortune 500 and unicorn companies in securing their network. \n3. Was the Head of Student R&D division of my univeristy, we built robots and satelite prototypes. \n4. Won 2 national championships with the go-kart our team built. \n \nLeaving a digital footprint of my 2cents on Tech, Design & Philosophy"
-    },
-    "blog": {
-      "description": "Check Out my blog on Medium",
-      "output": "<a href='https://medium.com/@samrudhyash' target='_blank' class='command-link'>Opening blog: https://medium.com/@samrudhyash</a>"
-    },
-    "date": {
-      "description": "Show current date and time",
-      "output": "dynamic",
-      "handler": "getDateTime"
-    },
-    "cv": {
-      "description": "View my cv",
-      "output": "<a href='https://drive.google.com/file/d/1K1E3HOu-GTkGDm0pJF5NkQNXQemwnwPq/view?usp=drive_link' target='_blank' class='command-link'>Opening CV: https://drive.google.com/file/d/1K1E3HOu-GTkGDm0pJF5NkQNXQemwnwPq/view</a>"
-    },
-    "clear": {
-      "description": "Clear the terminal screen",
-      "output": null
-    }
+      "about": {
+          "description": "Show information about this terminal",
+          "output": "Modern AI will fundamentally change how people use software in their daily lives. \nAgentic applications could, for the first time, enable computers to work \nwith people in much the same way people work with people.\n\nBut it won't happen without removing a ton of blockers. We need new UI patterns, \na reimagined privacy model, and a developer platform that makes it radically \nsimpler to build useful agents. That's the challenge we're taking on."
+      },
+      "help": {
+          "description": "List all available commands",
+          "output": "dynamic"
+      },
+      "clear": {
+          "description": "Clear the terminal screen",
+          "output": null
+      },
+      "date": {
+          "description": "Show current date and time",
+          "output": "dynamic"
+      },
+      "blog": {
+          "description": "Open my blog",
+          "output": "Opening blog...",
+          "url": "https://medium.com/@samrudhyash"
+      },
+      "cv": {
+          "description": "Open my resume",
+          "output": "Opening CV...",
+          "url": "https://drive.google.com/file/d/1K1E3HOu-GTkGDm0pJF5NkQNXQemwnwPq/view?usp=drive_link"
+      }
   }
 }
