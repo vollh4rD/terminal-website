@@ -1,5 +1,4 @@
 import WeatherCommand from './weather.js';
-
 let commands = {};
 let commandHistory = [];
 let historyIndex = -1;
@@ -14,30 +13,15 @@ const TYPING_TIMEOUT = 1000;
 const WELCOME_MESSAGES = [
     "Hey!",
     "You have landed on the website of Samrudh aka Vollhard",
-    "Type help to get the available commands"
+    "Type 'help' to get the available commands"
 ];
 
 const OUTPUT_DELAY = 100;
 
-function getDateTime() {
-    const now = new Date();
-    return now.toLocaleString('en-US', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true
-    });
-}
-
 function highlightCommands(text) {
     const commandNames = Object.keys(commands);
-    if (commandNames.length === 0) return text;
     const commandRegex = new RegExp(`\\b(${commandNames.join('|')})\\b`, 'g');
-    return text.replace(commandRegex, match => `<span class="command-highlight">${match}</span>`);
+    return text.replace(commandRegex, '<span class="command-highlight">$1</span>');
 }
 
 async function showWelcomeMessage(skipDelay = false) {
@@ -55,17 +39,24 @@ async function showWelcomeMessage(skipDelay = false) {
 async function loadCommands() {
     try {
         const response = await fetch('commands.json');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
+        if (!data || !data.commands) {
+            throw new Error('Invalid commands data format');
+        }
         commands = data.commands;
-        commands.connect = new ConnectCommand();
         commands.weather = new WeatherCommand();
         await showWelcomeMessage();
     } catch (error) {
         console.error('Error loading commands:', error);
+        await addToHistory('', `Error loading commands: ${error.message}. Please refresh the page.`, true);
     }
 }
 
 function updateCursor() {
+    // Create a temporary span to measure actual text width
     const measureSpan = document.createElement('span');
     measureSpan.style.visibility = 'hidden';
     measureSpan.style.position = 'absolute';
@@ -74,9 +65,11 @@ function updateCursor() {
     measureSpan.textContent = input.value.slice(0, input.selectionStart);
     document.body.appendChild(measureSpan);
     
+    // Get the actual width and use it for cursor positioning
     const width = measureSpan.getBoundingClientRect().width;
     cursor.style.left = `${width}px`;
     
+    // Clean up
     document.body.removeChild(measureSpan);
 }
 
@@ -89,112 +82,74 @@ function addToHistory(command, output, isError = false, isHtml = false) {
     }
     
     if (output) {
-        const outputDiv = document.createElement('div');
-        outputDiv.className = isError ? 'output error' : 'output';
-        outputDiv.style.whiteSpace = 'pre';
-        
-        if (isHtml || command === 'connect') {
-            outputDiv.innerHTML = output;
-        } else {
-            outputDiv.textContent = output;
-        }
-        
-        history.insertBefore(outputDiv, history.firstChild);
+        const lines = output.split('\n');
+        return new Promise(async (resolve) => {
+            for (let line of lines) {
+                const outputDiv = document.createElement('div');
+                outputDiv.className = isError ? 'output error' : 'output';
+                if (isHtml) {
+                    outputDiv.innerHTML = line;
+                } else {
+                    outputDiv.innerHTML = highlightCommands(line);
+                }
+                history.insertBefore(outputDiv, history.firstChild);
+                await new Promise(resolve => setTimeout(resolve, OUTPUT_DELAY));
+            }
+            resolve();
+        });
     }
     return Promise.resolve();
 }
 
 async function executeCommand(commandLine) {
-    const [command, ...args] = commandLine.trim().split(' ');
-    
-    if (command === '') return;
-    
-    if (command === 'clear') {
-        history.innerHTML = '';
-        await showWelcomeMessage(true);
-        return;
-    }
+  const [command, ...args] = commandLine.trim().split(' ');
+  
+  if (command === '') return;
+  
+  if (command === 'clear') {
+      history.innerHTML = '';
+      await showWelcomeMessage(true);
+      return;
+  }
 
   const cmd = commands[command];
   if (cmd) {
       let output;
-      if (command === 'connect') {
-          output = await cmd.execute();
-          await addToHistory(command, output, false, true);
-      } else if (cmd.output === 'dynamic') {
-          if (command === 'help') {
-              const commandList = Object.entries(commands)
-                  .map(([name, cmd]) => ({
-                      name: `<span class="command-highlight">${name}</span>`,
-                      description: cmd.description
-                  }));
-              
-              const maxLength = Math.max(...Object.keys(commands).map(name => name.length));
-              
-              output = commandList
-                  .map(cmd => {
-                      const plainName = cmd.name.replace(/<[^>]+>/g, '');
-                      const padding = ' '.repeat(maxLength - plainName.length + 2);
-                      return `${cmd.name}${padding}- ${cmd.description}`;
-                  })
-                  .join('\n');
-              
-              await addToHistory(command, output, false, true);
-          } else if (command === 'weather') {
-              try {
-                  output = await cmd.execute(args);
-                  await addToHistory(command, output);
-              } catch (error) {
-                  await addToHistory(command, error.message, true);
+      let isError = false;
+
+      try {
+          if (command === 'weather') {
+              output = await cmd.execute(args);
+          } else if (cmd.output === 'dynamic') {
+              if (command === 'help') {
+                  output = Object.entries(commands)
+                      .map(([name, cmd]) => `${name.padEnd(10)} - ${cmd.description}`)
+                      .join('\n');
+              } else if (command === 'date') {
+                  output = new Date().toLocaleString();
+              } else if (command === 'echo') {
+                  output = args.join(' ');
               }
           } else {
               output = cmd.output;
-              await addToHistory(command, output);
           }
-      } else {
-          output = cmd.output;
-          await addToHistory(command, output);
+
+          await addToHistory(commandLine, output, isError);
           
           if (cmd.url) {
               window.open(cmd.url, '_blank');
           }
+      } catch (error) {
+          console.error('Command error:', error);
+          await addToHistory(commandLine, error.message, true);
       }
   } else {
-      await addToHistory(command, `Command not found: ${command}. Type 'help' for available commands.`, true);
+      await addToHistory(commandLine, `Command not found: ${command}. Type 'help' for available commands.`, true);
   }
 }
 
-class ConnectCommand {
-    constructor() {
-        this.description = "Show my social media links";
-        this.output = "dynamic";
-    }
 
-  async execute() {
-      const links = [
-          { platform: "X", url: "https://x.com/xvollhard" },
-          { platform: "LinkedIn", url: "https://linkedin.com/in/samrudh-yash" },
-          { platform: "GitHub", url: "https://github.com/vollh4rD" },
-          { platform: "Medium", url: "https://medium.com/@samrudhyash" }
-      ];
-
-      // Calculate the maximum length of the URLs
-      const maxLength = Math.max(...links.map(link => link.url.length));
-
-      const socialLinks = links.map(link => {
-          const padding = ' '.repeat(maxLength - link.url.length + 3); // +2 for the space after the URL
-          return `│  ${link.platform.padEnd(10)} : <a href="${link.url}" target="_blank" class="command-link">${link.url}</a>${padding}│`;
-      }).join('\n');
-
-        return `┌──────────────────────────────────────────────────────┐
-│               Connect with me                        │
-├──────────────────────────────────────────────────────┤
-${socialLinks}
-└──────────────────────────────────────────────────────┘`;
-    }
-}
-
-// Event Listeners
+// Cursor state handling
 input.addEventListener('input', () => {
     clearTimeout(typingTimer);
     cursor.classList.add('typing');
@@ -211,12 +166,14 @@ input.addEventListener('input', () => {
     updateCursor();
 });
 
+// Handle all keyboard events
 input.addEventListener('keydown', async (e) => {
     if (e.key === 'Enter') {
         const command = input.value;
         input.value = '';
         updateCursor();
         
+        // Show enter state briefly
         cursor.classList.remove('typing');
         cursor.classList.add('enter');
         
@@ -248,6 +205,7 @@ input.addEventListener('keydown', async (e) => {
     }
 });
 
+// Focus handling
 input.addEventListener('focus', () => {
     if (input.value) {
         cursor.classList.add('typing');
@@ -260,6 +218,7 @@ input.addEventListener('blur', () => {
     }
 });
 
+// Keep input focused
 window.addEventListener('click', () => {
     input.focus();
     if (!input.value && !isTyping) {
@@ -267,6 +226,27 @@ window.addEventListener('click', () => {
     }
 });
 
+// Handle typing state
+function handleTyping() {
+  clearTimeout(typingTimer);
+  cursor.classList.add('typing');
+  cursor.classList.remove('enter');
+  
+  // Set timer to return to blinking state after typing stops
+  typingTimer = setTimeout(() => {
+      if (!cursor.classList.contains('enter')) {
+          cursor.classList.remove('typing');
+      }
+  }, TYPING_TIMEOUT);
+}
+
+// Update input handlers
+input.addEventListener('input', () => {
+  updateCursor();
+  handleTyping();
+});
+
+// Handle mobile viewport changes
 function handleMobileKeyboard() {
     const viewheight = window.visualViewport.height;
     document.documentElement.style.height = `${viewheight}px`;
@@ -276,6 +256,7 @@ if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', handleMobileKeyboard);
 }
 
+// Add touch event handling for better mobile interaction
 if ('ontouchstart' in window) {
     input.addEventListener('touchstart', (e) => {
         input.focus();
@@ -283,6 +264,9 @@ if ('ontouchstart' in window) {
     });
 }
 
+
 // Initialize
 loadCommands();
 updateCursor();
+
+
