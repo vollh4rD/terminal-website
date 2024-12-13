@@ -19,6 +19,20 @@ const WELCOME_MESSAGES = [
 
 const OUTPUT_DELAY = 100;
 
+function getDateTime() {
+    const now = new Date();
+    return now.toLocaleString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+    });
+}
+
 function highlightCommands(text) {
     const commandNames = Object.keys(commands);
     if (commandNames.length === 0) return text;
@@ -91,90 +105,90 @@ function addToHistory(command, output, isError = false, isHtml = false) {
 }
 
 async function executeCommand(commandLine) {
-  const [command, ...args] = commandLine.trim().split(' ');
-  
-  if (command === '') return;
-  
-  if (command === 'clear') {
-      history.innerHTML = '';
-      await showWelcomeMessage(true);
-      return;
-  }
+    const [command, ...args] = commandLine.trim().split(' ');
+    
+    if (command === '') return;
+    
+    if (command === 'clear') {
+        history.innerHTML = '';
+        await showWelcomeMessage(true);
+        return;
+    }
 
-  const cmd = commands[command];
-  if (cmd) {
-      let output;
-      if (command === 'connect') {
-          output = await cmd.execute();
-          await addToHistory(command, output, false, true);
-      } else if (cmd.output === 'dynamic') {
-          if (command === 'help') {
-              const commandList = Object.entries(commands)
-                  .map(([name, cmd]) => ({
-                      name: `<span class="command-highlight">${name}</span>`,
-                      description: cmd.description
-                  }));
-              
-              const maxLength = Math.max(...Object.keys(commands).map(name => name.length));
-              
-              output = commandList
-                  .map(cmd => {
-                      const plainName = cmd.name.replace(/<[^>]+>/g, '');
-                      const padding = ' '.repeat(maxLength - plainName.length + 2);
-                      return `${cmd.name}${padding}- ${cmd.description}`;
-                  })
-                  .join('\n');
-              
-              await addToHistory(command, output, false, true);
-          } else if (command === 'weather') {
-              try {
-                  output = await cmd.execute(args);
-                  await addToHistory(command, output);
-              } catch (error) {
-                  await addToHistory(command, error.message, true);
-              }
-          } else {
-              output = cmd.output;
-              await addToHistory(command, output);
-          }
-      } else {
-          output = cmd.output;
-          await addToHistory(command, output);
-      }
-  } else {
-      await addToHistory(command, `Command not found: ${command}. Type 'help' for available commands.`, true);
-  }
+    const cmd = commands[command];
+    if (cmd) {
+        let output;
+        if (command === 'connect') {
+            output = await cmd.execute();
+            await addToHistory(command, output, false, true);
+        } else if (cmd.output === 'dynamic') {
+            if (command === 'help') {
+                const commandList = Object.entries(commands)
+                    .map(([name, cmd]) => ({
+                        name: `<span class="command-highlight">${name}</span>`,
+                        description: cmd.description
+                    }));
+                
+                const maxLength = Math.max(...Object.keys(commands).map(name => name.length));
+                
+                output = commandList
+                    .map(cmd => {
+                        const plainName = cmd.name.replace(/<[^>]+>/g, '');
+                        const padding = ' '.repeat(maxLength - plainName.length + 2);
+                        return `${cmd.name}${padding}- ${cmd.description}`;
+                    })
+                    .join('\n');
+                
+                await addToHistory(command, output, false, true);
+            } else if (command === 'date') {
+                output = getDateTime();
+                await addToHistory(command, output);
+            } else if (command === 'weather') {
+                try {
+                    output = await cmd.execute(args);
+                    await addToHistory(command, output);
+                } catch (error) {
+                    await addToHistory(command, error.message, true);
+                }
+            }
+        } else {
+            output = cmd.output;
+            await addToHistory(command, output, false, cmd.output.includes('<a'));
+        }
+    } else {
+        await addToHistory(command, `Command not found: ${command}. Type 'help' for available commands.`, true);
+    }
 }
 
 class ConnectCommand {
-  constructor() {
-      this.description = "Show my social media links";
-      this.output = "dynamic";
-  }
+    constructor() {
+        this.description = "Show my social media links";
+        this.output = "dynamic";
+    }
 
-  async execute() {
-    const links = [
-        { platform: "X", url: "https://x.com/xvollhard" },
-        { platform: "Email", url: "samrudh@duck.com", href: "mailto:samrudh@duck.com" },
-        { platform: "LinkedIn", url: "https://linkedin.com/in/samrudh-yash" },
-        { platform: "GitHub", url: "https://github.com/vollh4rD" },
-        { platform: "Medium", url: "https://medium.com/@samrudhyash" }
-    ];
-  
-    // Calculate the maximum length of the URLs
-    const maxLength = Math.max(...links.map(link => link.url.length));
-  
-    const socialLinks = links.map(link => {
-        const padding = ' '.repeat(maxLength - link.url.length + 3); // +2 for the space after the URL
-        return `│  ${link.platform.padEnd(10)} : <a href="${link.href || link.url}" target="_blank" class="command-link">${link.url}</a>${padding}│`;
-    }).join('\n');
+    async execute() {
+        const links = [
+            { platform: "X", url: "https://x.com/xvollhard" },
+            { platform: "Email", url: "samrudh@duck.com", href: "mailto:samrudh@duck.com" },
+            { platform: "LinkedIn", url: "https://linkedin.com/in/samrudh-yash" },
+            { platform: "GitHub", url: "https://github.com/vollh4rD" },
+            { platform: "Medium", url: "https://medium.com/@samrudhyash" }
+        ];
+    
+        // Calculate the maximum length of the URLs
+        const maxLength = Math.max(...links.map(link => link.url.length));
+    
+        const socialLinks = links.map(link => {
+            const padding = ' '.repeat(maxLength - link.url.length + 3);
+            return `│  ${link.platform.padEnd(10)} : <a href="${link.href || link.url}" target="_blank" class="command-link">${link.url}</a>${padding}│`;
+        }).join('\n');
 
-      return `┌──────────────────────────────────────────────────────┐
+        return `┌──────────────────────────────────────────────────────┐
 │               Connect with me                        │
 ├──────────────────────────────────────────────────────┤
 ${socialLinks}
 └──────────────────────────────────────────────────────┘`;
-  }
+    }
 }
 
 // Event Listeners
