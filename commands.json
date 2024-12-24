@@ -4,7 +4,7 @@
   "commands": {
       "about": {
           "description": "Show information about this terminal",
-          "output": "Modern AI will fundamentally change how people use software in their daily lives. \nAgentic applications could, for the first time, enable computers to work \nwith people in much the same way people work with people.\n\nBut it won't happen without removing a ton of blockers. We need new UI patterns, \na reimagined privacy model, and a developer platform that makes it radically \nsimpler to build useful agents. That's the challenge we're taking on."
+          "output": "I am Samrudh aka Vollhard,what have I do so far? \n1. Represented my country and competed against for developing greentech (Red Bull Basement 2021)\n2. Worked with fortune 500 and unicorn companies in securing their network. \n3. Was the Head of Student R&D division of my univeristy, we built robots and satelite prototypes. \n4. Won 2 national championships with the go-kart our team built. \n \nLeaving a digital footprint of my 2cents on Tech, Design & Philosophy"
       },
       "help": {
           "description": "List all available commands",
