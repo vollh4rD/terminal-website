@@ -1,36 +1,134 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Samrudh (xVollhard)</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <div class="aurora-container">
-    <div class="aurora"></div>
-    <div class="aurora-layer"></div>
-  </div>
-  <div class="terminal-container">
-    <div id="history" class="terminal-history"></div>
-    
-    <div class="input-section">
-      <div class="help-panel collapsed">
-        <div class="help-header">
-        </div>
-        <div class="command-list">
-          <!-- Commands will be populated from JSON -->
-        </div>
-      </div>
+<!doctype html>
+<html class=" dark" lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="">
+        <meta name="keywords" content="">
+		<title>Samrudh (0xVollhard)</title>
+		<!-- Favicon -->
+        <link href="assets/images/favicon.png" rel="shortcut icon">
+		<!-- CSS -->
+        <link href="assets/plugins/swiper/swiper-bundle.min.css" rel="stylesheet">
+		<link href="assets/style.css" rel="stylesheet">
+        <link rel="stylesheet" href="assets/styles.css">
+		<!-- Fonts/Icons -->
+		<link href="assets/plugins/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+	</head>
+    <body class="overflow-x-hidden bg-bodyBg font-opensans dark:bg-black">
 
-      <div class="input-line">
-        <span class="prompt">user@samrudh.co ></span>
-        <div class="input-wrapper">
-          <input type="text" id="input" autofocus spellcheck="false">
-          <div class="cursor"></div>
+        <!-- Toggle Menu -->
+        <div class="toggle-menu z-20 toggle-menu fixed top-0 right-0 translate-x-3 w-96 h-full bg-black dark:bg-boxDark dark:shadow-darkBox px-10 py-12 invisible opacity-0 transition-all ease-out duration-[160ms]">
+            <span class="block font-mono font-normal uppercase text-sm tracking-[0.5px] text-white mb-2">Phone:</span>
+            <h4 class="font-poppins font-medium text-2xl text-white">+(976) 1234 4444</h4>
+            <div class="mt-6">
+                <span class="block font-mono font-normal uppercase text-sm tracking-[0.5px] text-white mb-2">Email:</span>
+                <h4 class="font-poppins font-medium text-2xl text-white">flatheme@gmail.com</h4>
+            </div>
+            <ul class="space-x-2 mt-4">
+                <li class="list-none inline-block">
+                    <a class="inline-flex justify-center items-center bg-white/15 w-10 h-10 rounded-full text-white transition ease-out duration-[120ms] hover:bg-white/20" href="#">
+                        <i class="bi bi-facebook"></i>
+                    </a>
+                </li>
+                <li class="list-none inline-block">
+                    <a class="inline-flex justify-center items-center bg-white/15 w-10 h-10 rounded-full text-white transition ease-out duration-[120ms] hover:bg-white/20" href="#">
+                        <i class="bi bi-twitter-x"></i>
+                    </a>
+                </li>
+                <li class="list-none inline-block">
+                    <a class="inline-flex justify-center items-center bg-white/15 w-10 h-10 rounded-full text-white transition ease-out duration-[120ms] hover:bg-white/20" href="#">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+                </li>
+            </ul>
+            <ul class="mt-10 space-y-2">
+                <li class="relative pl-3 before:content-[''] before:absolute before:top-1/2 before:left-0 before:-translate-y-1/2 before:bg-white before:opacity-70 before:w-1 before:h-1 before:rounded-full before:transition before:ease-linear before:duration-100 hover:before:opacity-100">
+                    <a class="font-mono font-medium uppercase text-sm tracking-[0.5px] text-white hover:underline" href="index.html">Light version</a>
+                </li>
+                <li class="relative pl-3 before:content-[''] before:absolute before:top-1/2 before:left-0 before:-translate-y-1/2 before:bg-white before:opacity-70 before:w-1 before:h-1 before:rounded-full before:transition before:ease-linear before:duration-100 hover:before:opacity-100">
+                    <a class="font-mono font-medium uppercase text-sm tracking-[0.5px] text-white hover:underline" href="#">Buy Gray</a>
+                </li>
+            </ul>
+            <div class="absolute bottom-12 left-10 right-10">
+                <p class="text-white/70">&copy; 2024 FlaTheme.</p>
+            </div>
+            <!-- Menu Close Button -->
+            <button class="menu-close absolute top-4 right-4 inline-flex justify-center items-center bg-white/15 w-10 h-10 rounded-full text-white text-xl transition ease-out duration-150 hover:bg-white/20">
+                <i class="bi bi-x"></i>
+            </button>
         </div>
-      </div>
-    </div>
-  </div>
+        <!-- end Toggle Menu-->
 
-  <script type="module" src="script.js"></script>
-</body>
+        
+
+            <!-- Header -->
+            <header class="navbar">
+                <div class="container max-w-[1320px] mx-auto px-5 xl:px-3">
+                    <div class="lg:flex lg:justify-between">
+                        <div class="flex h-[50px] items-center space-x-6 lg:order-2 justify-end">
+                            <ul class="space-x-3.5 font-mono font-medium uppercase text-sm tracking-[0.5px]">
+                                <li class="list-none inline-block"><a class="hover:underline dark:text-white" target="_blank" href="https://x.com/0xvollhard">x(TW)</a></li>
+                                <li class="list-none inline-block"><a class="hover:underline dark:text-white" target="_blank" href="https://linkedin.com/in/samrudh-yash">LI</a></li>
+                                <li class="list-none inline-block"><a class="hover:underline dark:text-white" target="_blank" href="https://behance.net/atomicsam">BE</a></li>
+                            </ul>
+                        </div>
+                        <div class="py-7 lg:order-1">
+                            <h1 class="text-5xl xl:text-7xl font-poppins font-semibold dark:text-white">Samrudh <span class="stroke-text" style="font-size: 2rem;">(0xVollhard)</span></h1>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="container max-w-[1320px] mx-auto px-5 xl:px-3">
+                <div class="terminal-container">
+                    <div id="history" class="terminal-history"></div>
+                    
+                    <div class="input-section">
+                        <div class="help-panel collapsed">
+                            <div class="help-header"></div>
+                            <div class="command-list"></div>
+                        </div>
+                        
+                        <div class="input-line">
+                            <span class="prompt">user@samrudh.co ></span>
+                            <div class="input-wrapper">
+                                <input type="text" id="input" autofocus spellcheck="false">
+                                <div class="cursor"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                
+                ><!-- end container -->
+
+        <!-- Background Decorational Lines -->
+        <div class="-z-[1] fixed top-0 left-0 overflow-hidden w-full h-full">
+			<div class="absolute top-0 left-0 w-1/4 lg:w-1/5 h-full border-r border-black/10 dark:border-white/15 before:content-[''] before:z-[1] before:absolute before:-top-20 before:-right-[1px] before:w-[1px] before:h-20 before:bg-gradient-to-b before:from-transparent before:to-black/50 dark:before:to-white/50 before:animate-bgLine"></div>
+			<div class="absolute top-0 left-0 w-2/4 lg:w-2/5 h-full border-r border-black/10 dark:border-white/15 before:content-[''] before:z-[1] before:absolute before:-top-20 before:-right-[1px] before:w-[1px] before:h-20 before:bg-gradient-to-b before:from-transparent before:to-black/50 dark:before:to-white/50 before:animate-bgLine before:animation-delay-2000"></div>
+			<div class="absolute top-0 left-0 w-3/4 lg:w-3/5 h-full border-r border-black/10 dark:border-white/15 before:content-[''] before:z-[1] before:absolute before:-top-20 before:-right-[1px] before:w-[1px] before:h-20 before:bg-gradient-to-b before:from-transparent before:to-black/50 dark:before:to-white/50 before:animate-bgLine before:animation-delay-6000"></div>
+			<div class="hidden lg:block absolute top-0 left-0 w-4/5 h-full border-r border-black/10 dark:border-white/15 before:content-[''] before:z-[1] before:absolute before:-top-20 before:-right-[1px] before:w-[1px] before:h-20 before:bg-gradient-to-b before:from-transparent before:to-black/50 dark:before:to-white/50 before:animate-bgLine before:animation-delay-4000"></div>
+		</div>
+
+        <!-- Page Preloader -->
+        <div class="preloader z-30 fixed top-0 left-0 visible opacity-100 bg-black w-full h-full text-center transition-all ease-out duration-500">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex space-x-3 font-mono font-normal uppercase text-white">
+                <span class="opacity-100 inline-block transition ease-linear duration-100 animate-loader">L</span>
+                <span class="opacity-100 inline-block transition ease-linear duration-100 animate-loader animation-delay-100">O</span>
+                <span class="opacity-100 inline-block transition ease-linear duration-100 animate-loader animation-delay-200">A</span>
+                <span class="opacity-100 inline-block transition ease-linear duration-100 animate-loader animation-delay-300">D</span>
+                <span class="opacity-100 inline-block transition ease-linear duration-100 animate-loader animation-delay-400">I</span>
+                <span class="opacity-100 inline-block transition ease-linear duration-100 animate-loader animation-delay-500">N</span>
+                <span class="opacity-100 inline-block transition ease-linear duration-100 animate-loader animation-delay-600">G</span>
+            </div>
+        </div>
+
+        <!-- JavaScripts -->
+        <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+        <script src="assets/plugins/jquery.min.js"></script>
+        <script src="assets/plugins/plugins.js"></script>
+        <script src="assets/js/functions.js"></script>
+        <script type="module" src="script.js"></script>
+    </body>
 </html>
