@@ -1,4 +1,4 @@
-import WeatherCommand from './weather.js';
+import WeatherCommand from './assets/js/weather.js';
 
 let commands = {};
 let commandHistory = [];
@@ -66,6 +66,49 @@ function updateCursor() {
     document.body.removeChild(measureSpan);
 }
 
+function wrapText(text, maxWidth) {
+    if (!text) return '';
+    const words = text.split(' ');
+    const lines = [];
+    let currentLine = '';
+
+    words.forEach(word => {
+        // Handle newlines in the text
+        if (word.includes('\n')) {
+            const parts = word.split('\n');
+            parts.forEach((part, index) => {
+                if (index > 0) {
+                    lines.push(currentLine);
+                    currentLine = '';
+                }
+                if (part) {
+                    if (currentLine.length + part.length + 1 > maxWidth) {
+                        lines.push(currentLine);
+                        currentLine = part;
+                    } else {
+                        currentLine = currentLine + (currentLine ? ' ' : '') + part;
+                    }
+                }
+            });
+            return;
+        }
+
+        // Normal word wrapping
+        if (currentLine.length + word.length + 1 > maxWidth) {
+            lines.push(currentLine);
+            currentLine = word;
+        } else {
+            currentLine = currentLine + (currentLine ? ' ' : '') + word;
+        }
+    });
+
+    if (currentLine) {
+        lines.push(currentLine);
+    }
+
+    return lines.join('\n');
+}
+
 function addToHistory(command, output, isError = false, isHtml = false) {
     if (command) {
         const commandEntry = document.createElement('div');
@@ -77,12 +120,15 @@ function addToHistory(command, output, isError = false, isHtml = false) {
     if (output) {
         const outputDiv = document.createElement('div');
         outputDiv.className = isError ? 'output error' : 'output';
-        outputDiv.style.whiteSpace = 'pre';
+        outputDiv.style.whiteSpace = 'pre-wrap';
         
         if (isHtml || command === 'connect') {
             outputDiv.innerHTML = output;
         } else {
-            outputDiv.textContent = output;
+            // Get the terminal width based on container size
+            const terminalWidth = Math.floor(history.clientWidth / 10); // Approximate characters per line
+            const wrappedText = wrapText(output, terminalWidth);
+            outputDiv.textContent = wrappedText;
         }
         
         history.insertBefore(outputDiv, history.firstChild);
