@@ -95,6 +95,7 @@
             border-bottom: 2px dashed #333;
             padding-bottom: 1rem;
             margin-bottom: 1.5rem;
+            position: relative;
         }
 
         .receipt-header h2 {
@@ -342,6 +343,23 @@
             font-size: 1.1rem;
         }
 
+        .currency-selector {
+            font-size: 1rem;
+            padding: 0.2rem 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            background: white;
+            font-family: inherit;
+            cursor: pointer;
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+        }
+
+        .currency-selector:focus {
+            outline: 1px dashed #333;
+        }
+
         .bill-title-label {
             color: #666;
             margin-right: 0.5rem;
@@ -573,6 +591,16 @@
 
     <div class="container">
         <div class="receipt-header">
+            <select id="currencySelector" class="currency-selector">
+                <option value="USD">USD ($)</option>
+                <option value="EUR">EUR (€)</option>
+                <option value="GBP">GBP (£)</option>
+                <option value="JPY">JPY (¥)</option>
+                <option value="CAD">CAD (C$)</option>
+                <option value="AUD">AUD (A$)</option>
+                <option value="BRL">BRL (R$)</option>
+                <option value="INR">INR (₹)</option>
+            </select>
             <div class="bill-title-container">
                 <input type="text" id="billTitle" class="bill-title-input" placeholder="Enter bill title" />
             </div>
@@ -649,6 +677,38 @@
         let people = [];
         let foodItems = [];
         let openFoodId = null;
+        let currentCurrency = 'USD';
+
+        // Currency symbols mapping
+        const currencySymbols = {
+            'USD': '$',
+            'EUR': '€',
+            'GBP': '£',
+            'JPY': '¥',
+            'CAD': 'C$',
+            'AUD': 'A$',
+            'BRL': 'R$',
+            'INR': '₹'
+        };
+
+        // Format currency based on selected currency
+        function formatCurrency(amount) {
+            const symbol = currencySymbols[currentCurrency];
+            if (currentCurrency === 'JPY') {
+                return `${symbol}${Math.round(amount)}`;
+            }
+            return `${symbol}${amount.toFixed(2)}`;
+        }
+
+        // Update currency and refresh display
+        function updateCurrency() {
+            currentCurrency = document.getElementById('currencySelector').value;
+            renderFood();
+            calculateBill();
+        }
+
+        // Add event listener for currency changes
+        document.getElementById('currencySelector').addEventListener('change', updateCurrency);
 
         // Set current date
         const dateInput = document.getElementById('billDate');
@@ -815,7 +875,7 @@
                     <div class="food-item" data-food-id="${food.id}">
                         <div class="food-header">
                             <span class="food-name">${food.name}</span>
-                            <span class="food-price">$${food.price.toFixed(2)}</span>
+                            <span class="food-price">${formatCurrency(food.price)}</span>
                             <button class="remove-food" onclick="removeFood(${food.id})" title="Remove">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M3 6h18"/>
@@ -905,7 +965,7 @@
                     const share = food.price / food.people.length;
                     food.people.forEach(person => {
                         personTotals[person] += share;
-                        personItems[person].push(`${food.name} - $${share.toFixed(2)}`);
+                        personItems[person].push(`${food.name} - ${formatCurrency(share)}`);
                     });
                 } else {
                     const totalUnequal = Object.values(food.unequalAmounts).reduce((sum, amt) => sum + amt, 0);
@@ -913,7 +973,7 @@
                         Object.entries(food.unequalAmounts).forEach(([person, amount]) => {
                             if (amount > 0) {
                                 personTotals[person] += amount;
-                                personItems[person].push(`${food.name} - $${amount.toFixed(2)}`);
+                                personItems[person].push(`${food.name} - ${formatCurrency(amount)}`);
                             }
                         });
                     }
@@ -925,14 +985,14 @@
             billContainer.innerHTML = people.map(person => `
                 <div class="person-bill">
                     <div class="person-name">${person}</div>
-                    <div class="person-total">$${personTotals[person].toFixed(2)}</div>
+                    <div class="person-total">${formatCurrency(personTotals[person])}</div>
                     <div class="person-items">${personItems[person].join('<br>')}</div>
                 </div>
             `).join('');
             
             // Total bill
             const total = Object.values(personTotals).reduce((sum, amt) => sum + amt, 0);
-            document.getElementById('totalBill').textContent = `TOTAL: $${total.toFixed(2)}`;
+            document.getElementById('totalBill').textContent = `TOTAL: ${formatCurrency(total)}`;
         }
 
         // Enter key handlers
