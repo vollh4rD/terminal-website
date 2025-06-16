@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beer Wise</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="beer-mug.png">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- html2canvas for PNG export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --background: 0 0% 100%;
+            --foreground: 240 10% 3.9%;
+            --card: 0 0% 100%;
+            --card-foreground: 240 10% 3.9%;
+            --popover: 0 0% 100%;
+            --popover-foreground: 240 10% 3.9%;
+            --primary: 240 5.9% 10%;
+            --primary-foreground: 0 0% 98%;
+            --secondary: 240 4.8% 95.9%;
+            --secondary-foreground: 240 5.9% 10%;
+            --muted: 240 4.8% 95.9%;
+            --muted-foreground: 240 3.8% 46.1%;
+            --accent: 240 4.8% 95.9%;
+            --accent-foreground: 240 5.9% 10%;
+            --destructive: 0 84.2% 60.2%;
+            --destructive-foreground: 0 0% 98%;
+            --border: 240 5.9% 90%;
+            --input: 240 5.9% 90%;
+            --ring: 240 5.9% 10%;
+            --radius: 0.5rem;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+        }
+
+        .header-container h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: hsl(var(--foreground));
+        }
+
+        .form-container {
+            background-color: hsl(var(--card));
+            padding: 25px;
+            border-radius: var(--radius);
+            border: 1px solid hsl(var(--border));
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .form-container:hover {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        .form-container h5 {
+            font-weight: 500;
+            color: hsl(var(--foreground));
+            margin-bottom: 15px;
+        }
+
+        .form-control {
+            border-radius: var(--radius);
+            border: 1px solid hsl(var(--input));
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            transition: all 0.2s ease;
+            padding: 0.5rem 0.75rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: hsl(var(--ring));
+            box-shadow: 0 0 0 2px hsl(var(--ring) / 0.1);
+        }
+
+        .btn-primary {
+            background-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            border: none;
+            border-radius: var(--radius);
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: hsl(var(--primary) / 0.9);
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background-color: hsl(142.1 76.2% 36.3%);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-success:hover {
+            background-color: hsl(142.1 76.2% 36.3% / 0.9);
+            transform: translateY(-1px);
+        }
+
+        .checkbox-container {
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            background-color: hsl(var(--background));
+        }
+
+        .form-check-input {
+            border-radius: 0.25rem;
+            border: 1px solid hsl(var(--input));
+            background-color: hsl(var(--background));
+        }
+
+        .form-check-input:checked {
+            background-color: hsl(var(--primary));
+            border-color: hsl(var(--primary));
+        }
+
+        .table-container {
+            margin-top: 20px;
+            overflow-x: auto;
+            border-radius: var(--radius);
+            border: 1px solid hsl(var(--border));
+            background-color: hsl(var(--card));
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        }
+
+        #outputTable {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        #outputTable th {
+            background-color: hsl(var(--muted));
+            color: hsl(var(--muted-foreground));
+            font-weight: 500;
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid hsl(var(--border));
+        }
+
+        #outputTable td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid hsl(var(--border));
+        }
+
+        #outputTable tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        #outputTable tbody tr:nth-child(even) {
+            background-color: hsl(var(--muted) / 0.5);
+        }
+
+        #outputTable tbody tr:hover {
+            background-color: hsl(var(--accent));
+        }
+
+        .remove-btn {
+            color: hsl(var(--muted-foreground));
+            background: none;
+            border: none;
+            font-size: 0.875rem;
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: var(--radius);
+            transition: all 0.2s ease;
+        }
+
+        .remove-btn:hover {
+            color: hsl(var(--destructive));
+            background-color: hsl(var(--destructive) / 0.1);
+        }
+
+        .food-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-right: 1rem;
+            margin-bottom: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            background-color: hsl(var(--accent));
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+        }
+
+        .user-list strong {
+            color: hsl(var(--foreground));
+        }
+
+        #userList {
+            color: hsl(var(--muted-foreground));
+            font-size: 0.875rem;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            min-width: 200px;
+            background-color: hsl(var(--card));
+            color: hsl(var(--card-foreground));
+            padding: 1rem;
+            border-radius: var(--radius);
+            border: 1px solid hsl(var(--border));
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        .btn-whatsapp {
+            background-color: #25d366;
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-whatsapp:hover {
+            background-color: #128c7e;
+            transform: translateY(-1px);
+        }
+
+        .btn-whatsapp i {
+            margin-right: 0.5rem;
+        }
+
+        @media (max-width: 576px) {
+            .header-container h1 {
+                font-size: 1.5rem;
+            }
+
+            .logo {
+                width: 40px;
+                height: 40px;
+            }
+
+            .form-container {
+                padding: 1rem;
+            }
+
+            .btn-primary, .btn-success, .btn-whatsapp {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-container">
+            <img src="beerwise/beer-mug.png" alt="Beer Wise Logo" class="logo">
+            <h1>Beer Wise</h1>
+        </div>
+
+        <!-- Form to add users -->
+        <div class="form-container user-list">
+            <h5>Add User</h5>
+            <form id="addUserForm" class="row g-3">
+                <div class="col-md-6 col-sm-8">
+                    <input type="text" class="form-control" id="newUserName" placeholder="Enter user name" required>
+                </div>
+                <div class="col-md-2 col-sm-4">
+                    <button type="submit" class="btn btn-primary w-100">Add User</button>
+                </div>
+            </form>
+            <div id="userList" class="mt-3"></div phylogeny
+        </div>
+
+        <!-- Form to add food items -->
+        <div class="form-container">
+            <h5>Add Food Item</h5>
+            <form id="foodForm" class="row g-3">
+                <div class="col-md-4 col-sm-12">
+                    <label for="foodItem" class="form-label">Food Item</label>
+                    <input type="text" class="form-control" id="foodItem" placeholder="Enter food item" required>
+                </div>
+                <div class="col-md-2 col-sm-12">
+                    <label for="foodPrice" class="form-label">Price (₹)</label>
+                    <input type="number" class="form-control" id="foodPrice" placeholder="0.00" step="0.01 Amplmin="0" required>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label class="form-label">Shared By</label>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="selectAllUsers">
+                        <label class="form-check-label" for="selectAllUsers">Select All Users</label>
+                    </div>
+                    <div class="checkbox-container" id="userCheckboxes"></div>
+                </div>
+                <div class="col-md-2 col-sm-12 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">Add Item</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Output table -->
+        <div class="table-container">
+            <table class="table table-bordered" id="outputTable">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Food Items</th>
+                        <th>Total (₹)</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="2" class="text-end"><strong>Grand Total</strong></td>
+                        <td id="grandTotal">0.00</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="d-flex gap-2 justify-content-center mt-4">
+            <button class="btn btn-success btn-download">Download Table as PNG</button>
+            <button class="btn btn-whatsapp btn-share-whatsapp">
+                <i class="fab fa-whatsapp"></i> Share on WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Font Awesome for WhatsApp icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <script>
+        // Data structure to store users and their food items
+        const users = {};
+        const foodItems = {};
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Handle adding a new user
+        document.getElementById('addUserForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const userName = document.getElementById('newUserName').value.trim();
+
+            if (!userName) {
+                showToast('Please enter a user name.');
+                return;
+            }
+
+            if (!users[userName]) {
+                users[userName] = { items: [], total: 0 };
+                updateUserList();
+                updateUserCheckboxes();
+                showToast(`User "${userName}" added successfully.`);
+            } else {
+                showToast('User already exists.');
+            }
+
+            document.getElementById('addUserForm').reset();
+        });
+
+        // Update the user list display
+        function updateUserList() {
+            const userList = document.getElementById('userList');
+            userList.innerHTML = '<strong>Users:</strong> ' + (Object.keys(users).join(', ') || 'No users added');
+        }
+
+        // Update the user checkboxes
+        function updateUserCheckboxes() {
+            const checkboxContainer = document.getElementById('userCheckboxes');
+            checkboxContainer.innerHTML = '';
+            Object.keys(users).forEach(user => {
+                const div = document.createElement('div');
+                div.className = 'form-check';
+                div.innerHTML = `
+                    <input class="form-check-input user-checkbox" type="checkbox" value="${user}" id="checkbox-${user}">
+                    <label class="form-check-label" for="checkbox-${user}">${user}</label>
+                `;
+                checkboxContainer.appendChild(div);
+            });
+        }
+
+        // Handle "Select All Users" checkbox
+        document.getElementById('selectAllUsers').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('#userCheckboxes .user-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+        });
+
+        // Handle food item form submission
+        document.getElementById('foodForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const foodItem = document.getElementById('foodItem').value.trim();
+            const foodPrice = parseFloat(document.getElementById('foodPrice').value);
+            const selectedUsers = Array.from(document.querySelectorAll('#userCheckboxes .user-checkbox:checked')).map(input => input.value);
+
+            if (!foodItem || isNaN(foodPrice) || foodPrice < 0 || selectedUsers.length === 0) {
+                showToast('Please fill all fields and select at least one user.');
+                return;
+            }
+
+            const foodId = Date.now().toString();
+            foodItems[foodId] = { name: foodItem, totalPrice: foodPrice, users: selectedUsers };
+            const splitPrice = foodPrice / selectedUsers.length;
+
+            selectedUsers.forEach(user => {
+                users[user].items.push({ id: foodId, name: foodItem, price: splitPrice });
+                users[user].total += splitPrice;
+            });
+
+            updateTable();
+            showToast(`Food item "${foodItem}" added successfully.`);
+
+            document.getElementById('foodForm').reset();
+            document.getElementById('selectAllUsers').checked = false;
+            document.querySelectorAll('#userCheckboxes .user-checkbox').forEach(checkbox => checkbox.checked = false);
+        });
+
+        // Update the table display
+        function updateTable() {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+            let grandTotal = 0;
+
+            for (const [user, data] of Object.entries(users)) {
+                const row = document.createElement('tr');
+                const itemsList = data.items.map((item, index) => `
+                    <div class="food-item">
+                        ${item.name}
+                        <button class="remove-btn" onclick="removeFoodItem('${user}', ${index})">✕</button>
+                    </div>
+                `).join('');
+                row.innerHTML = `
+                    <td>${user}</td>
+                    <td>${itemsList}</td>
+                    <td>₹${data.total.toFixed(2)}</td>
+                `;
+                tableBody.appendChild(row);
+                grandTotal += data.total;
+            }
+
+            document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
+        }
+
+        // Remove food item
+        function removeFoodItem(user, itemIndex) {
+            const item = users[user].items[itemIndex];
+            const foodId = item.id;
+            const sharedUsers = foodItems[foodId].users;
+            const isShared = sharedUsers.length > 1;
+
+            if (isShared) {
+                const removeAll = confirm(`Do you want to remove "${item.name}" for all users? Click OK to remove for all, or Cancel to remove only for ${user}.`);
+                if (removeAll) {
+                    sharedUsers.forEach(sharedUser => {
+                        const userItems = users[sharedUser].items;
+                        const index = userItems.findIndex(i => i.id === foodId);
+                        if (index !== -1) {
+                            users[sharedUser].total -= userItems[index].price;
+                            userItems.splice(index, 1);
+                        }
+                    });
+                    delete foodItems[foodId];
+                    showToast(`"${item.name}" removed for all users.`);
+                } else {
+                    users[user].total -= item.price;
+                    users[user].items.splice(itemIndex, 1);
+                    foodItems[foodId].users = sharedUsers.filter(u => u !== user);
+
+                    if (foodItems[foodId].users.length > 0) {
+                        const newSplitPrice = foodItems[foodId].totalPrice / foodItems[foodId].users.length;
+                        foodItems[foodId].users.forEach(sharedUser => {
+                            const userItem = users[sharedUser].items.find(i => i.id === foodId);
+                            if (userItem) {
+                                users[sharedUser].total = users[sharedUser].total - userItem.price + newSplitPrice;
+                                userItem.price = newSplitPrice;
+                            }
+                        });
+                    } else {
+                        delete foodItems[foodId];
+                    }
+                    showToast(`"${item.name}" removed for ${user}.`);
+                }
+            } else {
+                users[user].total -= item.price;
+                users[user].items.splice(itemIndex, 1);
+                delete foodItems[foodId];
+                showToast(`"${item.name}" removed for ${user}.`);
+            }
+
+            updateTable();
+        }
+
+        // Download table as PNG
+        function downloadTableAsPNG() {
+            const table = document.getElementById('outputTable');
+            const removeButtons = table.querySelectorAll('.remove-btn');
+            
+            // Hide remove buttons temporarily
+            removeButtons.forEach(btn => {
+                btn.style.display = 'none';
+            });
+            
+            html2canvas(table).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'beer_wise_bill.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                showToast('Table downloaded as PNG.');
+                
+                // Restore remove buttons
+                removeButtons.forEach(btn => {
+                    btn.style.display = '';
+                });
+            }).catch(error => {
+                console.error('Error generating PNG:', error);
+                // Restore remove buttons in case of error
+                removeButtons.forEach(btn => {
+                    btn.style.display = '';
+                });
+            });
+        }
+
+        // Share table on WhatsApp
+        function shareTableOnWhatsApp() {
+            const table = document.getElementById('outputTable');
+            const removeButtons = table.querySelectorAll('.remove-btn');
+            
+            // Hide remove buttons temporarily
+            removeButtons.forEach(btn => {
+                btn.style.display = 'none';
+            });
+            
+            html2canvas(table).then(canvas => {
+                // Convert canvas to blob
+                canvas.toBlob(function(blob) {
+                    // Create a file from the blob
+                    const file = new File([blob], 'beer_wise_bill.png', { type: 'image/png' });
+                    
+                    // Check if Web Share API is supported
+                    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                        navigator.share({
+                            title: 'Beer Wise Bill',
+                            text: 'Here\'s our bill split from Beer Wise!',
+                            files: [file]
+                        }).then(() => {
+                            showToast('Shared on WhatsApp successfully!');
+                        }).catch(error => {
+                            console.error('Error sharing:', error);
+                            // Fallback to WhatsApp Web
+                            fallbackToWhatsAppWeb(canvas);
+                        });
+                    } else {
+                        // Fallback to WhatsApp Web
+                        fallbackToWhatsAppWeb(canvas);
+                    }
+                    
+                    // Restore remove buttons
+                    removeButtons.forEach(btn => {
+                        btn.style.display = '';
+                    });
+                }, 'image/png');
+            }).catch(error => {
+                console.error('Error generating PNG:', error);
+                // Restore remove buttons in case of error
+                removeButtons.forEach(btn => {
+                    btn.style.display = '';
+                });
+            });
+        }
+
+        // Fallback function to open WhatsApp Web
+        function fallbackToWhatsAppWeb(canvas) {
+            const imageDataUrl = canvas.toDataURL('image/png');
+            const message = encodeURIComponent('Here\'s our bill split from Beer Wise! 🍺');
+            const whatsappUrl = `https://wa.me/?text=${message}`;
+            
+            // Open WhatsApp Web
+            window.open(whatsappUrl, '_blank');
+            
+            // Show instructions to user
+            showToast('WhatsApp Web opened. Please attach the image manually.');
+            
+            // Also trigger download so user can attach it
+            const link = document.createElement('a');
+            link.download = 'beer_wise_bill.png';
+            link.href = imageDataUrl;
+            link.click();
+        }
+
+        // Initialize user list
+        updateUserList();
+
+        // Add event listener for download button
+        document.querySelector('.btn-download').addEventListener('click', downloadTableAsPNG);
+
+        // Add event listener for WhatsApp share button
+        document.querySelector('.btn-share-whatsapp').addEventListener('click', shareTableOnWhatsApp);
+    </script>
+</body>
+</html>
