@@ -125,10 +125,12 @@
             display: flex;
             gap: 0.5rem;
             margin-bottom: 1rem;
+            flex-wrap: wrap;
         }
 
         .input-group input {
             flex: 1;
+            min-width: 0;
             padding: 0.5rem;
             border: 1px solid #ddd;
             font-family: inherit;
@@ -141,10 +143,43 @@
             padding: 0.5rem 1rem;
             cursor: pointer;
             font-family: inherit;
+            white-space: nowrap;
+            min-width: fit-content;
         }
 
         .input-group button:hover {
             background: #2c3e50;
+        }
+
+        /* Mobile responsive adjustments */
+        @media (max-width: 480px) {
+            .input-group {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .input-group input {
+                width: 100%;
+                flex: none;
+            }
+            
+            .input-group button {
+                width: 100%;
+                flex: none;
+            }
+            
+            .container {
+                margin: 1rem;
+                padding: 1rem;
+            }
+            
+            .navbar {
+                padding: 0.8rem 1rem;
+            }
+            
+            .navbar-brand h1 {
+                font-size: 1.5rem;
+            }
         }
 
         /* People list */
