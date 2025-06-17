@@ -1037,6 +1037,7 @@
         async function shareOnWhatsApp() {
             const billTitle = document.getElementById('billTitle').value || 'Untitled Bill';
             const billDate = document.getElementById('billDate').value;
+            const paidBy = document.getElementById('paidBy').value || 'Not specified';
             
             // Format date
             const formattedDate = new Date(billDate).toLocaleDateString('en-US', {
@@ -1044,6 +1045,34 @@
                 month: 'long',
                 day: 'numeric'
             });
+
+            // Populate hidden receipt
+            document.getElementById('imageBillTitle').textContent = billTitle;
+            document.getElementById('imageBillDate').textContent = `Date: ${formattedDate}`;
+            document.getElementById('imagePaidBy').textContent = `Paid By: ${paidBy}`;
+
+            // Render person bills
+            const imagePersonBills = document.getElementById('imagePersonBills');
+            imagePersonBills.innerHTML = '';
+            const personBills = document.querySelectorAll('.person-bill');
+            personBills.forEach(bill => {
+                const name = bill.querySelector('.person-name').textContent;
+                const total = bill.querySelector('.person-total').textContent;
+                const items = bill.querySelector('.person-items').textContent;
+
+                const personBillDiv = document.createElement('div');
+                personBillDiv.className = 'receipt-person-bill';
+                personBillDiv.innerHTML = `
+                    <div class="receipt-person-name">${name}</div>
+                    <div class="receipt-person-items">${items}</div>
+                    <div class="receipt-person-total">Total: ${total}</div>
+                `;
+                imagePersonBills.appendChild(personBillDiv);
+            });
+
+            // Render total
+            const totalBill = document.getElementById('totalBill').textContent;
+            document.getElementById('imageTotalBill').textContent = totalBill;
 
             // Generate the image first
             const receiptElement = document.getElementById('receiptForImage');
